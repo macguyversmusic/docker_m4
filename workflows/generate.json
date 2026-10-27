@@ -1,0 +1,71 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "_meta": {"title": "Qwen-Image-Edit 2511 (fp8)"},
+    "inputs": {"unet_name": "qwen_image_edit_2511_fp8mixed.safetensors", "weight_dtype": "default"}
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "_meta": {"title": "Text encoder (Qwen2.5-VL 7B)"},
+    "inputs": {"clip_name": "qwen_2.5_vl_7b_fp8_scaled.safetensors", "type": "qwen_image", "device": "default"}
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "_meta": {"title": "VAE"},
+    "inputs": {"vae_name": "qwen_image_vae.safetensors"}
+  },
+  "5": {
+    "class_type": "ModelSamplingAuraFlow",
+    "inputs": {"model": ["1", 0], "shift": 3}
+  },
+  "6": {
+    "class_type": "CFGNorm",
+    "inputs": {"model": ["5", 0], "strength": 1}
+  },
+  "10": {
+    "class_type": "LoadImage",
+    "_meta": {"title": "Picture 1: the source image"},
+    "inputs": {"image": "rabbit.png"}
+  },
+  "11": {
+    "class_type": "ImageScale",
+    "_meta": {"title": "Source to 1024x1024"},
+    "inputs": {"image": ["10", 0], "upscale_method": "lanczos", "width": 1024, "height": 1024, "crop": "center"}
+  },
+  "12": {
+    "class_type": "ImageCrop",
+    "_meta": {"title": "Picture 2: head close-up (x 22-78%, y 0-56%)"},
+    "inputs": {"image": ["11", 0], "width": 574, "height": 574, "x": 225, "y": 0}
+  },
+  "15": {
+    "class_type": "EmptySD3LatentImage",
+    "_meta": {"title": "Output 9:16 (864x1536)"},
+    "inputs": {"width": 864, "height": 1536, "batch_size": 1}
+  },
+  "20": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "_meta": {"title": "Negative (empty)"},
+    "inputs": {"clip": ["2", 0], "vae": ["3", 0], "image1": ["11", 0], "image2": ["12", 0], "prompt": ""}
+  },
+  "21": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "_meta": {"title": "Prompt"},
+    "inputs": {"clip": ["2", 0], "vae": ["3", 0], "image1": ["11", 0], "image2": ["12", 0], "prompt": "{{PROMPT}}"}
+  },
+  "30": {
+    "class_type": "KSampler",
+    "_meta": {"title": "Full settings: 40 steps, CFG 4"},
+    "inputs": {
+      "model": ["6", 0], "positive": ["21", 0], "negative": ["20", 0], "latent_image": ["15", 0],
+      "seed": 986743827658, "steps": 40, "cfg": 4, "sampler_name": "euler", "scheduler": "simple", "denoise": 1
+    }
+  },
+  "31": {
+    "class_type": "VAEDecode",
+    "inputs": {"samples": ["30", 0], "vae": ["3", 0]}
+  },
+  "32": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["31", 0], "filename_prefix": "regen"}
+  }
+}
