@@ -77,4 +77,8 @@ RUN comfy-node-install comfyui-rmbg comfyui-inpaint-cropandstitch comfyui-kjnode
       [ -f "$r" ] && uv pip install --python /opt/venv/bin/python -r "$r" || true; \
     done
 
+# RunPod's GitHub builds need the handler in the repo. This is the official
+# worker-comfyui 5.10.0 handler, identical to the one already in the base image.
+COPY handler.py /handler.py
+
 ENV COMFY_LOG_LEVEL=INFO
