@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-#
 # RunPod Serverless worker: ComfyUI with Qwen-Image-Edit-2511 plus the tools for
 # targeted fixes (text-to-mask, crop-and-stitch inpainting, colour matching,
 # background cut-out and a 2x upscaling decode). Everything is baked in, so a
