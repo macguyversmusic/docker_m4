@@ -36,7 +36,5 @@ The model downloads run in parallel to fit RunPod's 30-minute build limit. If a 
 The standard worker-comfyui input: a workflow in ComfyUI's API format, plus images by name.
 
 ```json
-{"input": {"workflow": {"...": "..."}, "images": [{"name": "rabbit.png", "image": "<base64>"}]}}
+{"input": {"workflow": {"...": "..."}, "images": [{"name": "input.png", "image": "<base64>"}]}}
 ```
-
-`workflows/generate.json` is the starting workflow: Qwen-Image-Edit-2511 at its full settings (40 steps, CFG 4), output 864×1536, with the source image and a close-up crop of its top centre as the two references. Replace `{{PROMPT}}` before sending.
